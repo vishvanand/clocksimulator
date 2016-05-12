@@ -20,6 +20,7 @@ module clock_divider_led(
 input clock;
 input enable;
 input clock_count;
+input reset;
 output out_counter;
 
 reg out_counter;

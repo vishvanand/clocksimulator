@@ -19,14 +19,23 @@
 //
 //////////////////////////////////////////////////////////////////////////////////
 module clk_counter(
-    input clk,
-    input reset,
-	 output min_one,
-	 output min_ten,
-	 output sec_one,
-	 output sec_ten
+    clk,
+    reset,
+	 min_one,
+	 min_ten,
+	 sec_one,
+	 sec_ten
     );
-always @(posedge clk_min) begin
+	 
+	 input clk;
+	 input reset;
+	 
+	 output reg min_one;
+	 output reg min_ten;
+	 output reg sec_one;
+	 output reg sec_ten;
+	 
+always @(posedge clk) begin
 	if (reset)
 	begin
 		min_one <= 0;
@@ -34,7 +43,7 @@ always @(posedge clk_min) begin
 		sec_one <= 0;
 		sec_ten <= 0;
 	end
-	end
+	
 	
 	if (sec_one == 9)
 	begin 
@@ -42,19 +51,19 @@ always @(posedge clk_min) begin
 	end
 	else
 	begin
-		sec_one = (sec_one + 1) % 10;
-	end
+		sec_one <= (sec_one + 1) % 10;
 	end
 	
 	
 	if (min_one == 9)
+	begin
 		min_ten <= (min_ten + 1) % 6;
+	end
 	else
-		min_one = (min_one + 1) % 10;
+	begin
+		min_one <= (min_one + 1) % 10;
 	end
 end
-	
-
-
-
 endmodule
+
+
