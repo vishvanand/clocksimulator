@@ -37,8 +37,8 @@ LedC,
 LedD,	
 LedE,
 LedF,	
-LedG	
-
+LedG,	
+Anode
     );
 
 
@@ -60,7 +60,7 @@ output reg LedD;
 output reg LedE;
 output reg LedF;
 output reg LedG;
-
+output reg [3:0] Anode;
 
 wire debBtnS;
 wire debBtnR;
@@ -79,21 +79,28 @@ wire clk4hz;
 wire clk50hz;
 
 clock_divider_led clock1hz ( .clock(clk), .enable(1'b1), .clock_count(26'd50000000), .reset(reset), .out_counter(clk1hz));
-clock_divider_led clock2hz ( .clock(clk), .enable(1'b1), .clock_count(25'd25000000), .reset(reset), .out_counter(clk2hz));
-clock_divider_led clock4hz ( .clock(clk), .enable(1'b1), .clock_count(26'd1250000000), .reset(reset), .out_counter(clk4hz));
-clock_divider_led clock50hz( .clock(clk), .enable(1'b1), .clock_count(25'd1000000), .reset(reset), .out_counter(clk50hz));
+clock_divider_led clock2hz ( .clock(clk), .enable(1'b1), .clock_count(26'd25000000), .reset(reset), .out_counter(clk2hz));
+clock_divider_led clock4hz ( .clock(clk), .enable(1'b1), .clock_count(26'd12500000), .reset(reset), .out_counter(clk4hz));
+clock_divider_led clock50hz( .clock(clk), .enable(1'b1), .clock_count(26'd1000000), .reset(reset), .out_counter(clk50hz));
 
-wire minone;
-wire minten;
-wire secone;
-wire secten;
-
-wire clk1hzPause;
-
-assign clk1hzPause = ~debBtnS & clk1hz;
+wire [3:0] minone;
+wire [3:0] minten;
+wire [3:0] secone;
+wire [3:0] secten;
 
 
-clk_counter count(.clk(clk1hzPause), .reset(reset), .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten));
+
+wire minselect;
+wire secselect; 
+
+assign minselect = (~Adjust1 | (Adjust1 & Select)) & ~debBtnS;
+assign secselect = (~Adjust1 | (Adjust1 & ~Select)) & ~debBtnS;
+  
+wire clockfreq;
+
+assign clockfreq = Adjust1? clk1hz:clk2hz;
+
+clk_counter count(.clk(clockfreq), .reset(reset), .minselect(minselect), .secselect(secselect) , .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten));
 
 wire dig4;
 wire dig3;
@@ -112,9 +119,7 @@ sevenseg seven(.clock(clk), .reset(reset), .min1st(minone), .min2nd(minten),	.se
 .Digit3(dig3), .Digit2(dig2),	.Digit1(dig1),	.LedA(leda), .LedB(ledb),	.LedC(ledc),	.LedD(ledd), .LedE(lede),
 .LedF(ledf),	.LedG(ledg));		
 
-always @ (posedge clk1hz)
-begin
-if(debBtnS)
+always @ (posedge clk50hz)
 begin
 		Digit4 <= dig4;
 		Digit3 <= dig3;
@@ -128,6 +133,13 @@ begin
 		LedF <= ledf;
 		LedG <= ledg;
 end
-end
-  
+
+always @ (posedge clk4hz)
+begin
+if(Adjust1)
+	begin
+		Anode <= ~Anode;
+	end
+end 
+ 
 endmodule
