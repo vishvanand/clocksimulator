@@ -1,11 +1,11 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <report-views version="2.0" >
  <header>
-  <DateModified>2016-05-11T23:39:33</DateModified>
+  <DateModified>2016-05-12T01:48:53</DateModified>
   <ModuleName>debouncer</ModuleName>
   <SummaryTimeStamp>Unknown</SummaryTimeStamp>
-  <SavedFilePath>D:/XilinxVerilog/CSFiles/clocksimulator/iseconfig/debouncer.xreport</SavedFilePath>
-  <ImplementationReportsDirectory>D:/XilinxVerilog/CSFiles/clocksimulator\</ImplementationReportsDirectory>
+  <SavedFilePath>//tsclient/clocksimulator/iseconfig/debouncer.xreport</SavedFilePath>
+  <ImplementationReportsDirectory>//tsclient/clocksimulator\</ImplementationReportsDirectory>
   <DateInitialized>2016-05-11T23:37:10</DateInitialized>
   <EnableMessageFiltering>false</EnableMessageFiltering>
  </header>
@@ -211,5 +211,9 @@
    <view inputState="Routed" program="bitgen" contextTags="FPGA_ONLY" hidden="if_missing" type="HTML" file="usage_statistics_webtalk.html" label="WebTalk Report" />
    <view inputState="Routed" program="bitgen" contextTags="FPGA_ONLY" hidden="if_missing" type="Secondary_Report" file="webtalk.log" label="WebTalk Log File" />
   </viewgroup>
+ </body>
+</report-views>
+
+>
  </body>
 </report-views>
