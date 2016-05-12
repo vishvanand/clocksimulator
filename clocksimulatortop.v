@@ -21,7 +21,6 @@
 module clocksimulatortop(
 
 clk,
-reset,
 btnS,
 btnR,
 Select,
@@ -44,7 +43,6 @@ LedG
 
 
 input clk;
-input reset;
 input btnS;
 input btnR;
 input Select;
@@ -66,9 +64,14 @@ output reg LedG;
 
 wire debBtnS;
 wire debBtnR;
+wire reset;
+
+
 
 debouncer debounceS ( .clk(clk), .PB(btnS), .PB_state(debBtnS) );
 debouncer debounceR ( .clk(clk), .PB(btnR), .PB_state(debBtnR) );
+
+assign reset = debBtnR & clk1hz;
 
 wire clk1hz;
 wire clk2hz;

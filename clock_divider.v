@@ -24,7 +24,7 @@ input reset;
 output out_counter;
 
 reg out_counter;
-reg [27:0] local_timer;
+reg [90:0] local_timer;
 
 
 
@@ -32,7 +32,7 @@ always @(posedge clock)
 begin
 		if(reset)
 			begin
-					local_timer <= 28'b0;
+					local_timer <= 90'b0;
 					out_counter <= 1'b1;
 			end
 begin
@@ -43,7 +43,7 @@ begin
 	if(local_timer == clock_count)
 		begin
 		out_counter <= ~out_counter;
-		local_timer <= 28'b0;
+		local_timer <= 90'b0;
 		end
 end
 end
