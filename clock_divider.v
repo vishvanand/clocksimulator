@@ -13,6 +13,7 @@ module clock_divider_led(
     clock,
     enable,
 	 clock_count,
+	 reset,
     out_counter
     );
 	 
@@ -24,15 +25,18 @@ output out_counter;
 reg out_counter;
 reg [27:0] local_timer;
 
-initial out_counter = 1'b0;
-initial local_timer = clock_count;
+
 
 always @(posedge clock)
 begin
+		if(reset)
+			begin
+					local_timer <= 28'b0;
+					out_counter <= 1'b1;
+			end
 begin
 		if(enable)
 			local_timer <= local_timer+1;
-		
 end
 begin
 	if(local_timer == clock_count)
