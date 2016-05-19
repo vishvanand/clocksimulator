@@ -35,16 +35,16 @@ begin
 					local_timer <= 26'b0;
 					out_counter <= 1'b1;
 			end
-begin
+
 		if(enable)
 			local_timer <= local_timer+1;
-end
-begin
+
+
 	if(local_timer == clock_count)
 		begin
 		out_counter <= ~out_counter;
 		local_timer <= 26'b0;
 		end
-end
+
 end
 endmodule

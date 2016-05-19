@@ -18,215 +18,60 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module sevenseg(
-//Input
-///////////////////
-
-clock, //100 MHz clock
-reset, // reset
-min2nd, 	//Minutes 2nd digit
-min1st,	//Minutes 1st digit
-sec2nd,	//Seconds 2nd digit
-sec1st,	//Seconds 1st digit
-
-
-
-Digit4,	
-Digit3,	
-Digit2,	
-Digit1,	
-LedA,	
-LedB,	
-LedC,	
-LedD,	
-LedE,	
-LedF,	
-LedG		
-
+module sevenseg(input [1:0] select,
+    input [3:0] digit_val,
+	 input src_clk,
+	 //input src_rst,
+	 output reg [3:0]anode,
+	 output reg [6:0]segment
     );
-	 
-input [3:0] min2nd;
-input [3:0] min1st;
-input [3:0] sec2nd;
-input [3:0] sec1st;
-input reset;
-input clock;
-
-output reg Digit4;
-output reg Digit3;
-output reg Digit2;
-output reg Digit1;
-output reg LedA;
-output reg LedB;
-output reg LedC;
-output reg LedD;
-output reg LedE;
-output reg LedF;
-output reg LedG;	
-
-//Local Variables
-reg [3:0] cur_value;
-reg [1:0] cur_pos;
-
-
-initial begin
-cur_pos <= 0;
-cur_value <= 0;
-end
-
-
-always @ (posedge clock) begin
-
-
-	case(cur_pos)
-	2'd3: cur_value <= min2nd;
-	2'd2: cur_value <= min1st;
-	2'd1: cur_value <= sec2nd;
-	2'd0: cur_value <= sec1st;
-	default: cur_value <= 0;
-	endcase
 	
-	case(cur_pos) 
-	2'd3: begin
-	Digit4 <= 1'b1; 
-	Digit3 <= 0;
-	Digit2 <= 0;
-	Digit1 <= 0;
+	always @ (posedge src_clk)
+	begin
+		// anode
+		case(select)
+		/*
+			0:	anode <= 4'b1110;
+			1: anode <= 4'b1101;
+			2: anode <= 4'b1011;
+			default: anode <= 4'b0111;
+		*/
+		
+			0:	anode <= 4'b1110;
+			1: anode <= 4'b1101;
+			2: anode <= 4'b1011;
+			default: anode <= 4'b0111;
+			
+		endcase
+				
+		//cathodes
+		case(digit_val)
+			0:	segment <= 8'b1000000;//8'b00000011; // DP CG CF CE CD CC CB CA 
+			1:	segment <= 8'b1111001;//8'b10011111;
+			2:	segment <= 8'b0100100; //8'b00100011;
+			3:	segment <= 8'b0110000;//8'b00001101;
+			4:	segment <= 8'b0011001;//8'b10011101;
+			5:	segment <= 8'b0010010; //8'b01001001;
+			6:	segment <= 8'b0000010; //8'b01000001;
+			7:	segment <= 8'b1111000; //8'b00011111;
+			8:	segment <= 8'b0000000;//8'b00000001;
+			default: segment <= 8'b10011000;//8'b00011001;
+		endcase	
+		
+		// Set decimal point
+		//segment[7] <= ~dp;
+		
+		
+		/*
+		// Reset?
+		if(src_rst) 
+		begin
+			segment <= 8'b11000000;//8'b00000011;
+		end
+		else
+		begin
+			// Code goes here
+		end
+		*/
 	end
-	2'd2: begin
-	Digit4 <= 0; 
-	Digit3 <= 1'b1;
-	Digit2 <= 0;
-	Digit1 <= 0;
-	end
-	2'd1: begin
-	Digit4 <= 0; 
-	Digit3 <= 0;
-	Digit2 <= 1'b1;
-	Digit1 <= 0;
-	end
-	2'd0: begin
-	Digit4 <= 0; 
-	Digit3 <= 0;
-	Digit2 <= 0;
-	Digit1 <= 1'b1;
-	end
-	default: begin
-	Digit4 <= 0; 
-	Digit3 <= 0;
-	Digit2 <= 0;
-	Digit1 <= 0;
-	end
-	endcase
-	
-
-	case(cur_value)
-	4'd9: begin 
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 0;
-	LedF <= 1'b1;
-	LedG <= 1'b1;
-	end
-	4'd8: begin 
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 1'b1;
-	LedF <= 1'b1;
-	LedG <= 1'b1;
-	end
-	4'd7: begin 
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 0;
-	LedE <= 0;
-	LedF <= 1'b1;
-	LedG <= 0;
-	end
-	4'd6: begin 
-	LedA <= 1'b1;
-	LedB <= 0;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 1'b1;
-	LedF <= 1'b1;
-	LedG <= 1'b1;
-	end
-	4'd5: begin 
-	LedA <= 1'b1;
-	LedB <= 0;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 0;
-	LedF <= 1'b1;
-	LedG <= 1'b1;
-	end
-	4'd4: begin
-	LedA <= 0;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 0;
-	LedE <= 0;
-	LedF <= 1'b1;
-	LedG <= 1'b1;
-	end
-	4'd3: begin
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 0;
-	LedF <= 0;
-	LedG <= 1'b1;
-	end
-	4'd2: begin
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 0;
-	LedD <= 1'b1;
-	LedE <= 1'b1;
-	LedF <= 0;
-	LedG <= 1'b1;
-	end
-	4'd1: begin 
-	LedA <= 0;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 0;
-	LedE <= 0;
-	LedF <= 0;
-	LedG <= 0;
-	end
-	4'd0: begin 
-	LedA <= 1'b1;
-	LedB <= 1'b1;
-	LedC <= 1'b1;
-	LedD <= 1'b1;
-	LedE <= 1'b1;
-	LedF <= 1'b1;
-	LedG <= 0;
-	end
-	default: begin 
-	LedA <= 0;
-	LedB <= 0;
-	LedC <= 0;
-	LedD <= 0;
-	LedE <= 0;
-	LedF <= 0;
-	LedG <= 0;
-	end
-	endcase
-
-	
-	cur_pos <= cur_pos + 1;
-
-end
-
-
-
 endmodule
