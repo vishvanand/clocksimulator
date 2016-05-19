@@ -26,15 +26,15 @@ module clk_counter(
 	 min_one,
 	 min_ten,
 	 sec_one,
-	 sec_ten
-
+	 sec_ten,
+	 isdec
     );
 	 
 	 input clk;
 	 input reset;
 	 input minselect;
 	 input secselect;
-	 
+	 input isdec;
 	 output reg [3:0] min_one;
 	 output reg [3:0] min_ten;
 	 output reg [3:0] sec_one;
@@ -49,7 +49,7 @@ always @(posedge clk) begin
 		sec_ten <= 0;
 	end
 	
-	if(secselect)
+	if(secselect && ~isdec)
 		begin
 		sec_ten <= (sec_one == 9) ? sec_ten + 1: sec_ten;
 		sec_one <= (sec_one == 9) ? 0 : sec_one + 1;
@@ -57,6 +57,16 @@ always @(posedge clk) begin
 		begin
 				sec_one <= 4'b0000;
 				sec_ten <= 4'b0000;
+		end
+		end
+	else if(secselect && isdec)
+		begin
+		sec_ten <= (sec_one == 0) ? sec_ten - 1: sec_ten;
+		sec_one <= (sec_one == 0) ? 9 : sec_one - 1;
+		if( sec_ten == 0 && sec_one == 0)
+		begin
+				sec_one <= 4'b1001;
+				sec_ten <= 4'b0101;
 		end
 		end
 	else
@@ -81,7 +91,7 @@ always @(posedge clk) begin
 		
 		
 		 end
-		else if(minselect && ~secselect)
+		else if(minselect && ~secselect && ~isdec)
 			begin
 				min_ten <= (min_one == 9) ? min_ten + 1: min_ten;
 				min_one <= (min_one == 9) ? 0 : min_one + 1;
@@ -91,6 +101,18 @@ always @(posedge clk) begin
 						min_ten <= 4'b0000;
 					end
 			end
+		
+		else if(minselect && ~secselect && isdec)
+			begin
+				min_ten <= (min_one == 0) ? min_ten - 1: min_ten;
+				min_one <= (min_one == 0) ? 9 : min_one - 1;
+				if( min_ten == 0 && min_one == 0)
+					begin
+						min_one <= 4'b0101;
+						min_ten <= 4'b1001;
+					end
+			end
+		
 		else
 			begin
 			min_one <= min_one;

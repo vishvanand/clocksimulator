@@ -26,6 +26,7 @@ btnR,
 Select,
 Adjust1,
 Adjust2,
+isdec,
 /*
 Digit4,	
 Digit3,	
@@ -51,7 +52,7 @@ input btnR;
 input Select;
 input Adjust1;
 input Adjust2;
-
+input isdec;
 /*
 output reg Digit4;
 output reg Digit3;
@@ -127,7 +128,9 @@ assign clockfreq = Adjust1? clk2hz:clk1hz;
 assign secselect = Adjust1 && Adjust2? 1'b0 : ~debBtnS;
 assign minselect = Adjust1 && ~Adjust2? 1'b0 : ~debBtnS;
 
-clk_counter count(.clk(clockfreq), .reset(reset), .minselect(minselect), .secselect(secselect) , .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten));
+
+
+clk_counter count(.clk(clockfreq), .reset(reset), .minselect(minselect), .secselect(secselect) , .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten), .isdec(isdec));
 
 wire dig4;
 wire dig3;
