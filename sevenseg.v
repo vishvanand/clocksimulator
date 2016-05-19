@@ -30,18 +30,10 @@ module sevenseg(input [1:0] select,
 	begin
 		// anode
 		case(select)
-		/*
 			0:	anode <= 4'b1110;
 			1: anode <= 4'b1101;
 			2: anode <= 4'b1011;
 			default: anode <= 4'b0111;
-		*/
-		
-			0:	anode <= 4'b1110;
-			1: anode <= 4'b1101;
-			2: anode <= 4'b1011;
-			default: anode <= 4'b0111;
-			
 		endcase
 				
 		//cathodes

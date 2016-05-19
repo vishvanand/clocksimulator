@@ -125,9 +125,11 @@ wire secselect;
 wire clockfreq;
 
 assign clockfreq = Adjust1? clk2hz:clk1hz;
+
 assign secselect = Adjust1 && Adjust2? 1'b0 : ~debBtnS;
 assign minselect = Adjust1 && ~Adjust2? 1'b0 : ~debBtnS;
 
+reg countblink;
 
 always @ (posedge clk4hz)
 begin
@@ -174,7 +176,7 @@ end
 sevenseg(.select(sel), .digit_val(selectdigit), .src_clk(clk50hz), .anode(anodeout), .segment(cathodeout) );
 
 reg [3:0] anodeoutblink;
-reg countblink;
+
 
 /*
 always @ (posedge clk4hz)
@@ -223,27 +225,29 @@ begin
 		LedG <= ledg;
 		*/
 		
-		
-		if(Adjust1 && ~Adjust2 && countblink)
+	
+		if(Adjust1 && ~Adjust2)
 		begin
-			Anode[3] <= 1'b1;
+			Anode[3] <= anodeout[3];
 			Anode[2] <= anodeout[2];
-			Anode[1] <= anodeout[1];
-			Anode[0] <= 1'b1;
+			Anode[1] <= anodeout[1]; 
+			Anode[0] <= anodeout[0]; 
 			Cathode <= cathodeout;
 		end
-		else if (Adjust1 && Adjust2 && countblink)
+		else if (Adjust1 && Adjust2)
 		begin
-			Anode[1] <= 1'b1;
+			Anode[1] <= anodeout[1];
 			Anode[0] <= anodeout[0];
-			Anode[2] <= 1'b1;
+			Anode[2] <= anodeout[2];
 			Anode[3] <= anodeout[3];
 			Cathode <= cathodeout;
 		end
 		else
 		begin
+	
 			Anode <= anodeout;
 			Cathode <= cathodeout;
+			
 		end
 end
 
