@@ -48,8 +48,7 @@ always @(posedge clk) begin
 		sec_one <= 0;
 		sec_ten <= 0;
 	end
-	
-	if(secselect && ~isdec)
+	else if(secselect && ~isdec)
 		begin
 		sec_ten <= (sec_one == 9) ? sec_ten + 1: sec_ten;
 		sec_one <= (sec_one == 9) ? 0 : sec_one + 1;
@@ -75,7 +74,7 @@ always @(posedge clk) begin
 			sec_ten <= sec_ten;
 			end
 			
-	if(minselect && secselect)
+	if(minselect && secselect && ~isdec)
 		begin
 		if( sec_one == 9 && sec_ten == 5)
 		begin
@@ -108,8 +107,8 @@ always @(posedge clk) begin
 				min_one <= (min_one == 0) ? 9 : min_one - 1;
 				if( min_ten == 0 && min_one == 0)
 					begin
-						min_one <= 4'b0101;
-						min_ten <= 4'b1001;
+						min_one <= 4'b1001;
+						min_ten <= 4'b0101;
 					end
 			end
 		

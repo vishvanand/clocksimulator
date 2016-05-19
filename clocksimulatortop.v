@@ -98,10 +98,10 @@ wire clk2hz;
 wire clk4hz;
 wire clk50hz;
 
-clock_divider_led clock1hz ( .clock(clk), .enable(1'b1), .clock_count(26'd50000000), .reset(reset), .out_counter(clk1hz));
-clock_divider_led clock2hz ( .clock(clk), .enable(1'b1), .clock_count(26'd25000000), .reset(reset), .out_counter(clk2hz));
-clock_divider_led clock4hz ( .clock(clk), .enable(1'b1), .clock_count(26'd12500000), .reset(reset), .out_counter(clk4hz));
-clock_divider_led clock50hz( .clock(clk), .enable(1'b1), .clock_count(26'd250000), .reset(reset), .out_counter(clk50hz));
+clock_divider_led clock1hz ( .clock(clk), .enable(1'b1), .clock_count(26'd50000000), .reset(0), .out_counter(clk1hz));
+clock_divider_led clock2hz ( .clock(clk), .enable(1'b1), .clock_count(26'd25000000), .reset(0), .out_counter(clk2hz));
+clock_divider_led clock4hz ( .clock(clk), .enable(1'b1), .clock_count(26'd12500000), .reset(0), .out_counter(clk4hz));
+clock_divider_led clock50hz( .clock(clk), .enable(1'b1), .clock_count(26'd25000), .reset(0), .out_counter(clk50hz));
 
 wire [3:0] minone;
 wire [3:0] minten;
@@ -129,21 +129,20 @@ assign secselect = Adjust1 && Adjust2? 1'b0 : ~debBtnS;
 assign minselect = Adjust1 && ~Adjust2? 1'b0 : ~debBtnS;
 
 
+always @ (posedge clk4hz)
+begin
+	if(reset)
+		countblink <= 1;
+	else
+		countblink <= ~countblink;
+end
 
-clk_counter count(.clk(clockfreq), .reset(reset), .minselect(minselect), .secselect(secselect) , .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten), .isdec(isdec));
 
-wire dig4;
-wire dig3;
-wire dig2;
-wire dig1;
 
-wire leda;
-wire ledb;
-wire ledc;
-wire ledd;
-wire lede;
-wire ledf;
-wire ledg;
+
+clk_counter count(.clk(clockfreq), .reset(debBtnR), .minselect(minselect), .secselect(secselect) , .min_one(minone), .min_ten(minten), .sec_one(secone), .sec_ten(secten), .isdec(isdec));
+
+
 
 /*
 sevenseg seven(.clock(clk), .reset(reset), .min1st(minone), .min2nd(minten),	.sec1st(secone), .sec2nd(secten), .Digit4(dig4), 	
@@ -198,13 +197,6 @@ begin
 end
 */
 
-always @ (posedge clk4hz)
-begin
-	if(reset)
-		countblink <= 1;
-	else
-		countblink <= ~countblink;
-end
 
 
 always @ (posedge clk50hz)
